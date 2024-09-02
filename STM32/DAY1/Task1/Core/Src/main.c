@@ -49,7 +49,9 @@
 
 uint8_t ledCnt = 0;
 uint8_t lastLedCnt = 0;
+int pd2Cnt = 0;
 bool isSwitch12Down = false;
+bool isSwitch13Down = false;
 
 /* USER CODE END PV */
 
@@ -112,50 +114,66 @@ int main(void)
 
 	  // Switch(PB12) is Down:
 
-	  if(!(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_15))){
-
-		  isSwitch12Down = true;
-
-	  }else{ // Switch(PB12) is Up:
-
+	  if((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_15))){
 		  isSwitch12Down = false;
-		  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_SET);
-		  HAL_Delay(100);
-		  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_RESET);
-		  HAL_Delay(100);
+		  pd2Cnt = 0;
+	  }
 
-		  // Switch(PB15) is Down:
+	  if(isSwitch12Down == false){
+
+		  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, 1);
 		  if(!(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_15))){
 			  isSwitch12Down = true;
-		  }else{
-
-			  if(!(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12))){
-				  Turning_LED_Right();
-				  if(ledCnt == 0){
-					  ledCnt = 3;
-				  }else if(ledCnt == 3){
-					  ledCnt = 2;
-				  }else if(ledCnt == 2){
-					  ledCnt = 1;
-				  }else if(ledCnt == 1){
-					  ledCnt = 0;
-				  }
-			  }else{
-				  Turning_LED_Left();
-				  if(ledCnt == 0){
-					  ledCnt = 1;
-				  }else if(ledCnt == 1){
-					  ledCnt = 2;
-				  }else if(ledCnt == 2){
-					  ledCnt = 3;
-				  }else if(ledCnt == 3){
-					  ledCnt = 0;
-				  }
-			  }
-
+			  pd2Cnt = 1;
 		  }
-
+		  HAL_Delay(1000);
+		  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, 0);
+		  if(!(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_15)) && pd2Cnt == 1){
+			  isSwitch12Down = true;
+			  pd2Cnt = 2;
+		  }
+		  HAL_Delay(1000);
+	  }else if(isSwitch12Down == true){
+		  if(pd2Cnt == 1){
+			  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, 1);
+		  }else if(pd2Cnt == 2){
+			  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, 0);
+		  }
+		  HAL_Delay(1000);
 	  }
+
+
+	  if(!(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13))){
+		  isSwitch13Down = true;
+	  }else{
+		  isSwitch13Down = false;
+	  }
+
+
+	  if(!(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12))){
+		  Turning_LED_Right();
+		  if(ledCnt == 0){
+			  ledCnt = 3;
+		  }else if(ledCnt == 3){
+			  ledCnt = 2;
+		  }else if(ledCnt == 2){
+			  ledCnt = 1;
+		  }else if(ledCnt == 1){
+			  ledCnt = 0;
+		  }
+	  }else{
+		  Turning_LED_Left();
+		  if(ledCnt == 0){
+			  ledCnt = 1;
+		  }else if(ledCnt == 1){
+			  ledCnt = 2;
+		  }else if(ledCnt == 2){
+			  ledCnt = 3;
+		  }else if(ledCnt == 3){
+			  ledCnt = 0;
+		  }
+	  }
+
 
   }
   /* USER CODE END 3 */
@@ -218,7 +236,7 @@ void SystemClock_Config(void)
 
 void Turning_LED_Left(void){
 
-	if(isSwitch12Down == false){
+	if(isSwitch13Down == false){
 		// Turn Off: All LED
 		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, 1);
 		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, 1);
@@ -239,15 +257,38 @@ void Turning_LED_Left(void){
 			// Turn On: LED PC15
 			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, 0);
 		}
-		lastLedCnt = ledCnt;
+	}else if(isSwitch13Down == true){
+		// Turn Off: All LED
+		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, 0);
+		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, 0);
+		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, 0);
+		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, 0);
+
+		// When PC12 is On
+		if(ledCnt == 0){
+			// Turn On: LED PC12
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, 1);
+		}else if(ledCnt == 1){
+			// Turn On: LED PC13
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, 1);
+		}else if(ledCnt == 2){
+			// Turn On: LED PC14
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, 1);
+		}else if(ledCnt == 3){
+			// Turn On: LED PC15
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, 1);
+		}
 	}
+
+
 
 }
 
 
 void Turning_LED_Right(void){
 
-	if(isSwitch12Down == false){
+	if(isSwitch13Down == false){
+
 		// Turn Off: All LED
 		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, 1);
 		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, 1);
@@ -268,8 +309,30 @@ void Turning_LED_Right(void){
 			// Turn On: LED PC12
 			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, 0);
 		}
-		lastLedCnt = ledCnt;
+	}else if(isSwitch13Down == true){
+
+		// Turn Off: All LED
+		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, 0);
+		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, 0);
+		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, 0);
+		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, 0);
+
+		// When PC12 is On
+		if(ledCnt == 3){
+			// Turn On: LED PC15
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, 1);
+		}else if(ledCnt == 2){
+			// Turn On: LED PC14
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, 1);
+		}else if(ledCnt == 1){
+			// Turn On: LED PC13
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, 1);
+		}else if(ledCnt == 0){
+			// Turn On: LED PC12
+			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, 1);
+		}
 	}
+
 
 }
 
