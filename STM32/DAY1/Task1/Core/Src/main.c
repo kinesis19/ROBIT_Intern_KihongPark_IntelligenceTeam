@@ -109,6 +109,48 @@ int main(void)
 	  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_RESET);
 	  HAL_Delay(500);
 
+
+	  /* Task1-2 (Moving Left: LED PC12, PC13, PC14, PC15)*/
+	  // When PC12 is On
+	  if(!(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_12))){
+		  // Turn Off: All LED
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, GPIO_PIN_SET);
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_SET);
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_SET);
+		  HAL_Delay(200);
+		  // Turn On: LED PC13
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
+	  }else if(!(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13))){
+		  // Turn Off: All LED
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, GPIO_PIN_SET);
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_SET);
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_SET);
+		  HAL_Delay(200);
+		  // Turn On: LED PC14
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_RESET);
+	  }else if(!(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_14))){
+		  // Turn Off: All LED
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, GPIO_PIN_SET);
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_SET);
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_SET);
+		  HAL_Delay(200);
+		  // Turn On: LED PC15
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_RESET);
+
+	  }else if(!(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_15))){
+		  // Turn Off: All LED
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, GPIO_PIN_SET);
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_SET);
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, GPIO_PIN_SET);
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, GPIO_PIN_SET);
+		  HAL_Delay(200);
+		  // Turn On: LED PC12
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, GPIO_PIN_RESET);
+
+	  }
   }
   /* USER CODE END 3 */
 }
@@ -167,6 +209,7 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+
 
 /* USER CODE END 4 */
 
