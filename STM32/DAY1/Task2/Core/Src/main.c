@@ -47,9 +47,14 @@
 
 /* USER CODE BEGIN PV */
 uint32_t adc1_buffer[4] = {0, };
-float valueNormalization[10] = {0, };
-float resultNormalization = 0.0;
-float filterNormalization[10] = {0, };
+float valueNormalization[10] = {0, }; // Nomarlization Done Ary
+float filterNormalization[10] = {0.0, }; // Filtering Save Ary
+float resultAvgFilter = 0.0;
+float sumAvgFilter = 0.0;
+uint8_t cntNormalization = 0;
+uint8_t cntFilter = 0;
+
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -108,6 +113,24 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  if(cntNormalization == 10){
+		  resultAvgFilter = 0;
+		  sumAvgFilter = 0;
+		  cntNormalization = 0;
+		  for(uint8_t i = 0; i < 10; i++){
+			  if(i == 0){
+				  filterNormalization[i] = valueNormalization[i] / 1;
+			  }else if(i == 1){
+				  filterNormalization[i] = (valueNormalization[i-1] + valueNormalization[i]) / 2;
+			  }else if(i == 2){
+				  filterNormalization[i] = (valueNormalization[i-2] + valueNormalization[i-1] + valueNormalization[i]) / 3;
+			  }else if(2 < i){
+				  filterNormalization[i] = (valueNormalization[i-2] + valueNormalization[i-1] + valueNormalization[i]) / 3;
+			  }
+			  sumAvgFilter = sumAvgFilter + filterNormalization[i];
+		  }
+		  resultAvgFilter = sumAvgFilter / 10;
+	  }
 
   }
   /* USER CODE END 3 */
@@ -170,29 +193,25 @@ void SystemClock_Config(void)
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
     if(hadc->Instance == hadc1.Instance){
-    	float tempSum = 0;
-    	uint8_t idx1 = 1, idx2 = 2, idx3 = 3;
-    	for(uint32_t i = 0; i < 10; i++){
-    		valueNormalization[i] = (adc1_buffer[0] - 0.0) / (4095.0);
+		// Normalization
+		valueNormalization[cntNormalization] = (adc1_buffer[0] - 0.0) / (4095.0);
+		cntNormalization++;
 
-    		tempSum = tempSum + valueNormalization[i];
-			if(i == 0){
-				filterNormalization[i] = valueNormalization[i] / (i + 1);
-			}else if(i == 1){
-				filterNormalization[i] = (valueNormalization[i-1] + valueNormalization[i]) / (i + 1);
-			}else if(i == 2){
-				filterNormalization[i] = (valueNormalization[i-2] + valueNormalization[i-1] + valueNormalization[i]) / (i + 1);
-			}else if(2 < i && idx3 < 10){
-				filterNormalization[i] = (valueNormalization[idx1] + valueNormalization[idx2] + valueNormalization[idx3]) / 3;
-				idx1++;
-				idx2++;
-				idx3++;
-			}
-    	}
-
-
-
-//    	resultNormalization = resultNormalization / 10;
+//    	uint8_t idx1 = 1, idx2 = 2, idx3 = 3;
+//    	for(uint32_t i = 0; i < 10; i++){
+//			if(i == 0){
+//				filterNormalization[i] = valueNormalization[i] / (i + 1);
+//			}else if(i == 1){
+//				filterNormalization[i] = (valueNormalization[i-1] + valueNormalization[i]) / (i + 1);
+//			}else if(i == 2){
+//				filterNormalization[i] = (valueNormalization[i-2] + valueNormalization[i-1] + valueNormalization[i]) / (i + 1);
+//			}else if(2 < i && idx3 < 10){
+//				filterNormalization[i] = (valueNormalization[idx1] + valueNormalization[idx2] + valueNormalization[idx3]) / 3;
+//				idx1++;
+//				idx2++;
+//				idx3++;
+//			}
+//    	}
     }
 }
 /* USER CODE END 4 */
