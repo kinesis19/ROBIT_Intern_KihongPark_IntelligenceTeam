@@ -46,6 +46,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+uint8_t cntPD2 = 0;
 
 /* USER CODE END PV */
 
@@ -93,6 +94,10 @@ int main(void)
   MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
 	HAL_TIM_Base_Start_IT(&htim6);
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, 1);
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, 1);
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, 1);
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, 1);
 
   /* USER CODE END 2 */
 
@@ -163,9 +168,19 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 	if(htim->Instance == TIM6){
+		if(cntPD2 == 1){
+			/* <Task1-1> */
+			HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_2);
+			HAL_TIM_Base_Start_IT(&htim6);
+			cntPD2 = 0;
+		}else{
+			cntPD2++;
+		}
 
-		HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_2);
-		HAL_TIM_Base_Start_IT(&htim6);
+		/* <Task1-2-1> */
+		if(!(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12))){
+			HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_12);
+		}
 
 	}
 }
