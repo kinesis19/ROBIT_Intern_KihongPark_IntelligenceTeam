@@ -46,7 +46,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+uint32_t adc1_buffer[4] = {0, };
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -93,6 +93,8 @@ int main(void)
   MX_ADC1_Init();
   MX_TIM8_Init();
   /* USER CODE BEGIN 2 */
+  HAL_TIM_Base_Start_IT(&htim8);
+  HAL_ADC_Start_DMA(&hadc1, adc1_buffer, 4);
 
   /* USER CODE END 2 */
 
@@ -103,6 +105,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
   }
   /* USER CODE END 3 */
 }
@@ -162,6 +165,11 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
+    if(hadc->Instance == hadc1.Instance){
+
+    }
+}
 /* USER CODE END 4 */
 
 /**
