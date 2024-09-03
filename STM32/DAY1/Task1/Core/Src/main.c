@@ -53,6 +53,9 @@ int pd2Cnt = 0;
 bool isSwitch12Down = false;
 bool isSwitch13Down = false;
 bool isSwitch14Down = false;
+bool isSwitch15Down = false;
+
+
 
 /* USER CODE END PV */
 
@@ -81,7 +84,7 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+	HAL_Init();
 
   /* USER CODE BEGIN Init */
 
@@ -115,32 +118,49 @@ int main(void)
 
 	  // Switch(PB12) is Down:
 
+	  // Switch(PB15) is Up:
 	  if((HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_15))){
-		  isSwitch12Down = false;
+		  isSwitch15Down = false;
 		  pd2Cnt = 0;
 	  }
 
-	  if(isSwitch12Down == false){
 
+
+	  if(isSwitch15Down == false){
 		  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, 1);
-		  if(!(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_15))){
-			  isSwitch12Down = true;
-			  pd2Cnt = 1;
-		  }
+
 		  HAL_Delay(1000);
-		  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, 0);
-		  if(!(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_15)) && pd2Cnt == 1){
-			  isSwitch12Down = true;
-			  pd2Cnt = 2;
+		  if(!HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_15)){
+			  if(pd2Cnt == 2){
+				  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, 0);
+
+				  HAL_Delay(1000);
+			  }else{
+				  isSwitch15Down = true;
+				  pd2Cnt = 1;
+			  }
+		  }else{
+			  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, 0);
+
+			  HAL_Delay(1000);
+			  if(!HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_15) && (isSwitch15Down == false)){
+				  isSwitch15Down = true;
+				  pd2Cnt = 2;
+			  }
 		  }
-		  HAL_Delay(1000);
-	  }else if(isSwitch12Down == true){
+
+	  }
+
+
+
+	  /* Task1-6 (PB15) Toggle Pause */
+	  if(isSwitch15Down == true){
 		  if(pd2Cnt == 1){
 			  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, 1);
 		  }else if(pd2Cnt == 2){
 			  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, 0);
 		  }
-		  HAL_Delay(1000);
+		  HAL_Delay(2000);
 	  }
 
 
