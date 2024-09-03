@@ -47,6 +47,9 @@
 
 /* USER CODE BEGIN PV */
 uint32_t adc1_buffer[4] = {0, };
+float valueNormalization[10] = {0, };
+float resultNormalization = 0.0;
+float filterNormalization[10] = {0, };
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -167,7 +170,29 @@ void SystemClock_Config(void)
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
     if(hadc->Instance == hadc1.Instance){
+    	float tempSum = 0;
+    	uint8_t idx1 = 1, idx2 = 2, idx3 = 3;
+    	for(uint32_t i = 0; i < 10; i++){
+    		valueNormalization[i] = (adc1_buffer[0] - 0.0) / (4095.0);
 
+    		tempSum = tempSum + valueNormalization[i];
+			if(i == 0){
+				filterNormalization[i] = valueNormalization[i] / (i + 1);
+			}else if(i == 1){
+				filterNormalization[i] = (valueNormalization[i-1] + valueNormalization[i]) / (i + 1);
+			}else if(i == 2){
+				filterNormalization[i] = (valueNormalization[i-2] + valueNormalization[i-1] + valueNormalization[i]) / (i + 1);
+			}else if(2 < i && idx3 < 10){
+				filterNormalization[i] = (valueNormalization[idx1] + valueNormalization[idx2] + valueNormalization[idx3]) / 3;
+				idx1++;
+				idx2++;
+				idx3++;
+			}
+    	}
+
+
+
+//    	resultNormalization = resultNormalization / 10;
     }
 }
 /* USER CODE END 4 */
