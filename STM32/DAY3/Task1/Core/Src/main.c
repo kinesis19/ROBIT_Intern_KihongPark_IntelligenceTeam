@@ -102,7 +102,6 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
-//  HAL_TIME1_PWMN_Start(&htim1, TIM_CHANNEL_1);
   HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_1);
 
   /* USER CODE END 2 */
@@ -115,13 +114,17 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	  TIM1->CCR1 = 0;
-	  HAL_Delay(1000);
+	  HAL_Delay(500);
+	  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_12);
 	  TIM1->CCR1 = 300;
-	  HAL_Delay(1000);
+	  HAL_Delay(500);
+	  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
 	  TIM1->CCR1 = 500;
-	  HAL_Delay(1000);
+	  HAL_Delay(500);
+	  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
 	  TIM1->CCR1 = 700;
-	  HAL_Delay(1000);
+	  HAL_Delay(500);
+	  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_15);
   }
   /* USER CODE END 3 */
 }
