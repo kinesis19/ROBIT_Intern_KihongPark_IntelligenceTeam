@@ -101,6 +101,10 @@ int main(void)
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
 
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+//  HAL_TIME1_PWMN_Start(&htim1, TIM_CHANNEL_1);
+  HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_1);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -110,6 +114,14 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  TIM1->CCR1 = 0;
+	  HAL_Delay(1000);
+	  TIM1->CCR1 = 300;
+	  HAL_Delay(1000);
+	  TIM1->CCR1 = 500;
+	  HAL_Delay(1000);
+	  TIM1->CCR1 = 700;
+	  HAL_Delay(1000);
   }
   /* USER CODE END 3 */
 }
