@@ -121,31 +121,10 @@ int main(void)
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, 1);
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, 1);
 
-	  /* Changing Motor CW/CCW*/
-	  if(!(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12))){
-		  motorSpeed = -0.1;
-		  TIM3->CNT--;
-		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, 0);
-	  }else{ /* CW */
-		  motorSpeed = 0.1;
-		  TIM3->CNT++;
-		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, 1);
-	  }
-
-	  /* Motor CW */
-	  if(motorSpeed > 0){
-		  /* PC8 -> CW Mode*/
-		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, 0);
-	  }else if(motorSpeed < 0){
-		  /* PC8 -> CW Mode*/
-		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, 1);
-	  }
-
-	  //TIM1->CCR1 = 300;
-	  /* User can edit the registor of TIM1->CCR1(in Debugging Mode) */
-	  TIM1->CCR1 = inputValue;
-	  encoder_value = TIM3->CNT;
-	  HAL_Delay(1); /* Debugging: Checking for the encoder_value */
+	TIM1->CCR1 = 300;
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, 0);
+	encoder_value = (int16_t)TIM3->CNT;
+	HAL_Delay(1); /* Debugging: Checking for the encoder_value */
   }
   /* USER CODE END 3 */
 }
