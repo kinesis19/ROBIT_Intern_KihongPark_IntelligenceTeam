@@ -47,9 +47,10 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-double motorSpeed = 0;
-uint32_t encoder_value = 0;
-uint32_t inputValue = 100;
+float motorSpeed = 0;
+float resultMotorSpeed = 0;
+int32_t encoder_value = 0;
+int32_t fix = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -121,8 +122,21 @@ int main(void)
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, 1);
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, 1);
 
-	TIM1->CCR1 = 300;
-	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, 0);
+	/* Task2-1 Motor Control (CW/CCW) */
+	if(motorSpeed > 0){
+		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, 0);
+		resultMotorSpeed = motorSpeed * 1000;
+	}else if(motorSpeed < 0){
+		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, 1);
+		resultMotorSpeed = motorSpeed * (-1000);
+	}else if(motorSpeed == 0){
+		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, 1);
+		resultMotorSpeed = 0;
+	}
+
+	TIM1->CCR1 = resultMotorSpeed;
+
+//	TIM1->CCR1 = motorSpeed * 1000;
 	encoder_value = (int16_t)TIM3->CNT;
 	HAL_Delay(1); /* Debugging: Checking for the encoder_value */
   }
