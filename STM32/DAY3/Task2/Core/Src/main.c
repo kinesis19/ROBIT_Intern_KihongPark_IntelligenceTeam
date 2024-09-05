@@ -50,7 +50,8 @@
 float motorSpeed = 0;
 float resultMotorSpeed = 0;
 int32_t encoder_value = 0;
-int32_t fix = 0;
+int32_t cntRising = 0;
+int32_t cntFalling = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -126,9 +127,11 @@ int main(void)
 	if(motorSpeed > 0){
 		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, 0);
 		resultMotorSpeed = motorSpeed * 1000;
+		cntRising++;
 	}else if(motorSpeed < 0){
 		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, 1);
 		resultMotorSpeed = motorSpeed * (-1000);
+		cntFalling++;
 	}else if(motorSpeed == 0){
 		HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, 1);
 		resultMotorSpeed = 0;
