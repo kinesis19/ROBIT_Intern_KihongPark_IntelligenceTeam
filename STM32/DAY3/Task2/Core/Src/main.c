@@ -49,6 +49,7 @@
 /* USER CODE BEGIN PV */
 double motorSpeed = 0;
 uint32_t encoder_value = 0;
+uint32_t inputValue = 100;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -122,11 +123,11 @@ int main(void)
 
 	  /* Changing Motor CW/CCW*/
 	  if(!(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12))){
-		  motorSpeed = -0.5;
+		  motorSpeed = -0.1;
 		  TIM3->CNT--;
 		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, 0);
 	  }else{ /* CW */
-		  motorSpeed = 0.5;
+		  motorSpeed = 0.1;
 		  TIM3->CNT++;
 		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, 1);
 	  }
@@ -140,7 +141,9 @@ int main(void)
 		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, 1);
 	  }
 
-	  TIM1->CCR1 = 300;
+	  //TIM1->CCR1 = 300;
+	  /* User can edit the registor of TIM1->CCR1(in Debugging Mode) */
+	  TIM1->CCR1 = inputValue;
 	  encoder_value = TIM3->CNT;
 	  HAL_Delay(1); /* Debugging: Checking for the encoder_value */
   }
