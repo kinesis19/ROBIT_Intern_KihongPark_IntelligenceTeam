@@ -47,7 +47,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+double motorSpeed = 0;
+double encoder_value = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -103,6 +104,7 @@ int main(void)
 
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_1);
+  HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
 
   /* USER CODE END 2 */
 
@@ -113,21 +115,29 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  TIM1->CCR1 = 0;
-	  HAL_Delay(500);
-	  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_12);
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, 1);
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, 1);
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, 1);
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, 1);
+
+	  /* Changing Motor CW/CCW*/
+	  if(!(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12))){
+		  motorSpeed = -0.5;
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, 0);
+	  }else{ /* CW */
+		  motorSpeed = 0.5;
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, 1);
+	  }
+
+	  /* Motor CW */
+	  if(motorSpeed > 0){
+		  /* PC8 -> CW Mode*/
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, 0);
+	  }else if(motorSpeed < 0){
+		  /* PC8 -> CW Mode*/
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, 1);
+	  }
 	  TIM1->CCR1 = 300;
-	  HAL_Delay(500);
-	  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_13);
-	  TIM1->CCR1 = 500;
-	  HAL_Delay(500);
-	  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_14);
-	  TIM1->CCR1 = 700;
-	  HAL_Delay(500);
-	  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_15);
-	  TIM1->CCR1 = 1000;
-	  HAL_Delay(500);
-	  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_15);
   }
   /* USER CODE END 3 */
 }
