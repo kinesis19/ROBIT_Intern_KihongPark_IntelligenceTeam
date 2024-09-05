@@ -139,7 +139,6 @@ int main(void)
 
 	TIM1->CCR1 = resultMotorSpeed;
 
-//	TIM1->CCR1 = motorSpeed * 1000;
 	encoder_value = (int16_t)TIM3->CNT;
 	HAL_Delay(1); /* Debugging: Checking for the encoder_value */
   }
