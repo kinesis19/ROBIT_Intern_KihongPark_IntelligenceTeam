@@ -125,6 +125,9 @@ int main(void)
 	  TIM1->CCR1 = 700;
 	  HAL_Delay(500);
 	  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_15);
+	  TIM1->CCR1 = 1000;
+	  HAL_Delay(500);
+	  HAL_GPIO_TogglePin(GPIOC, GPIO_PIN_15);
   }
   /* USER CODE END 3 */
 }
