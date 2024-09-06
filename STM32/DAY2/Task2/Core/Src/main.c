@@ -21,7 +21,6 @@
 #include "adc.h"
 #include "dma.h"
 #include "tim.h"
-#include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -94,7 +93,6 @@ int main(void)
   MX_TIM8_Init();
   MX_ADC1_Init();
   MX_TIM6_Init();
-  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
 
   /* Turn Off All of LED*/
