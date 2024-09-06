@@ -97,6 +97,12 @@ int main(void)
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
 
+  /* Turn Off All of LED*/
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, 1);
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, 1);
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, 1);
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, 1);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -106,6 +112,33 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  /* Turn On LED */
+	  if(!(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12))){
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, 0);
+	  }else{
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_12, 1);
+	  }
+
+	  if(!(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13))){
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, 0);
+	  }else{
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, 1);
+	  }
+
+	  if(!(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14))){
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, 0);
+	  }else{
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, 1);
+	  }
+
+	  if(!(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_15))){
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, 0);
+	  }else{
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15, 1);
+	  }
+
+
+
   }
   /* USER CODE END 3 */
 }
